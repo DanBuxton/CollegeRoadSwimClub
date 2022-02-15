@@ -1,0 +1,35 @@
+﻿
+
+<h3>Swimmers</h3>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Name</th>
+            @*<th>Name</th>
+            <th>Name</th>
+            <th>Name</th>
+            <th>Name</th>*@
+            <th>Parent</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (swimmers is null)
+        {
+            <tr>
+                <td colspan="12" class="align-content-center">No swimmers</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code {
+    private List<Swimmer> swimmers;
+
+    protected override Task OnInitializedAsync()
+    {
+        swimmers = new();
+
+        return base.OnInitializedAsync();
+    }
+}
