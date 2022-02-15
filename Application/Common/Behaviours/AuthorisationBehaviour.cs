@@ -6,7 +6,7 @@ using MediatR;
 
 namespace CollegeRoadSwimClub.Application.Common.Behaviours;
 
-public class AuthorisationBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : notnull
+public class AuthorisationBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : notnull, IRequest<TResponse>
 {
     private readonly ICurrentUserService _currentUserService;
     private readonly IIdentityService _identityService;
@@ -21,9 +21,9 @@ public class AuthorisationBehaviour<TRequest, TResponse> : IPipelineBehavior<TRe
 
     public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
     {
-        var authorizeAttributes = request.GetType().GetCustomAttributes<AuthoriseAttribute>();
+        var authoriseAttributes = request.GetType().GetCustomAttributes<AuthoriseAttribute>();
 
-        if (authorizeAttributes.Any())
+        if (authoriseAttributes.Any())
         {
             // Must be authenticated user
             if (_currentUserService.UserId == null)
@@ -32,7 +32,7 @@ public class AuthorisationBehaviour<TRequest, TResponse> : IPipelineBehavior<TRe
             }
 
             // Role-based authorization
-            var authorizeAttributesWithRoles = authorizeAttributes.Where(a => !string.IsNullOrWhiteSpace(a.Roles));
+            var authorizeAttributesWithRoles = authoriseAttributes.Where(a => !string.IsNullOrWhiteSpace(a.Roles));
 
             if (authorizeAttributesWithRoles.Any())
             {
@@ -59,7 +59,7 @@ public class AuthorisationBehaviour<TRequest, TResponse> : IPipelineBehavior<TRe
             }
 
             // Policy-based authorization
-            var authorizeAttributesWithPolicies = authorizeAttributes.Where(a => !string.IsNullOrWhiteSpace(a.Policy));
+            var authorizeAttributesWithPolicies = authoriseAttributes.Where(a => !string.IsNullOrWhiteSpace(a.Policy));
             if (authorizeAttributesWithPolicies.Any())
             {
                 foreach (var policy in authorizeAttributesWithPolicies.Select(a => a.Policy))
