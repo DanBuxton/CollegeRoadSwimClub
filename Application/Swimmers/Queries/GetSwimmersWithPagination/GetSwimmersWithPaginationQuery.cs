@@ -9,7 +9,6 @@ namespace CollegeRoadSwimClub.Application.Swimmers.Queries.GetSwimmersWithPagina
 
 public class GetSwimmersWithPaginationQuery : IRequest<PaginatedList<SwimmerDTO>>
 {
-    public int ListId { get; set; }
     public int PageNumber { get; set; } = 1;
     public int PageSize { get; set; } = 10;
 }
@@ -28,7 +27,6 @@ public class GetSwimmersWithPaginationQueryHandler : IRequestHandler<GetSwimmers
     public async Task<PaginatedList<SwimmerDTO>> Handle(GetSwimmersWithPaginationQuery request, CancellationToken cancellationToken)
     {
         return await _context.Swimmers
-            //.Where(x => x.ListId == request.ListId)
             .OrderBy(x => x.Username)
             .ProjectTo<SwimmerDTO>(_mapper.ConfigurationProvider)
             .PaginatedListAsync(request.PageNumber, request.PageSize);

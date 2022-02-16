@@ -1,6 +1,8 @@
 ﻿using CollegeRoadSwimClub.Application.Common.Interfaces;
 //using CollegeRoadSwimClub.Infrastructure.Files;
 using CollegeRoadSwimClub.Infrastructure.Identity;
+using CollegeRoadSwimClub.Infrastructure.Persistence;
+using CollegeRoadSwimClub.Infrastructure.Services;
 //using CollegeRoadSwimClub.Infrastructure.Persistence;
 //using CollegeRoadSwimClub.Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication;
@@ -17,31 +19,31 @@ namespace CollegeRoadSwimClub.Infrastructure
         {
             if (configuration.GetValue<bool>("UseInMemoryDatabase"))
             {
-                //services.AddDbContext<ApplicationDbContext>(options =>
-                //    options.UseInMemoryDatabase("CleanArchitectureDb"));
+                services.AddDbContext<ApplicationDbContext>(options =>
+                    options.UseInMemoryDatabase("CleanArchitectureDb"));
             }
             else
             {
-                //services.AddDbContext<ApplicationDbContext>(options =>
-                //    options.UseSqlServer(
-                //        configuration.GetConnectionString("DefaultConnection"),
-                //        b => b.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName)));
+                services.AddDbContext<ApplicationDbContext>(options =>
+                    options.UseSqlServer(
+                        configuration.GetConnectionString("DefaultConnection"),
+                        b => b.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName)));
             }
 
-            //services.AddScoped<IApplicationDbContext>(provider => provider.GetRequiredService<ApplicationDbContext>());
+            services.AddScoped<IApplicationDbContext>(provider => provider.GetRequiredService<ApplicationDbContext>());
 
             //services.AddScoped<IDomainEventService, DomainEventService>();
 
-            //services
-            //    .AddDefaultIdentity<ApplicationUser>()
-            //    .AddRoles<IdentityRole>()
-            //    .AddEntityFrameworkStores<ApplicationDbContext>();
+            services
+                .AddDefaultIdentity<ApplicationUser>()
+                .AddRoles<IdentityRole>()
+                .AddEntityFrameworkStores<ApplicationDbContext>();
 
-            //services.AddIdentityServer()
-            //    .AddApiAuthorization<ApplicationUser, ApplicationDbContext>();
+            services.AddIdentityServer()
+                .AddApiAuthorization<ApplicationUser, ApplicationDbContext>();
 
-            //services.AddTransient<IIdentityService, IdentityService>();
-            //services.AddTransient<IDateTime, DateTimeService>();
+            services.AddTransient<IIdentityService, IdentityService>();
+            services.AddTransient<IDateTime, DateTimeService>();
 
             services.AddAuthentication()
                 .AddIdentityServerJwt();

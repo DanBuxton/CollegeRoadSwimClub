@@ -1,4 +1,4 @@
-﻿
+﻿@inject MediatR.ISender _sender
 
 <h3>Swimmers</h3>
 
@@ -14,22 +14,37 @@
         </tr>
     </thead>
     <tbody>
-        @if (swimmers is null)
+        @if (swimmerList is null)
         {
             <tr>
                 <td colspan="12" class="align-content-center">No swimmers</td>
+            </tr>
+        }
+        else
+        {
+            <tr>
+                @foreach (var swimmer in swimmerList.Items)
+                {
+                    
+                }
             </tr>
         }
     </tbody>
 </table>
 
 @code {
-    private List<Swimmer> swimmers;
+    private PaginatedList<SwimmerDTO> swimmerList = new(new(), 0, 1, 0);
 
-    protected override Task OnInitializedAsync()
+    [Parameter]
+    public GetSwimmersWithPaginationQuery query { get; set; }
+
+    [Parameter, SupplyParameterFromQuery(Name = "page")]
+    public int PageNumber { get; set; } = 1;
+
+    protected override async Task OnInitializedAsync()
     {
-        swimmers = new();
+        swimmerList = await _sender.Send(query);
 
-        return base.OnInitializedAsync();
+        await base.OnInitializedAsync();
     }
 }

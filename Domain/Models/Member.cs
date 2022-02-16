@@ -1,6 +1,8 @@
-﻿namespace CollegeRoadSwimClub.Domain.Models;
+﻿using CollegeRoadSwimClub.Domain.Common;
 
-public class Member
+namespace CollegeRoadSwimClub.Domain.Models;
+
+public class Member : AuditableModel
 {
     public Guid? Id { get; set; }
 
